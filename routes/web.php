@@ -1,7 +1,9 @@
 <?php
 
+use App\Helpers\ImageFilter;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Intervention\Image\ImageManagerStatic as Image;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,13 @@ Route::get('/', function () {
 Route::get('user/{id}/edit', function ($id){
     return $id;
 })->name('user.edit');
+
+Route::get('image', function (){
+    $img = Image::make('Laravel-9.jpg')
+        ->filter(new ImageFilter(50))
+        ->save('laravel-edit.jpg');
+    return $img->response();
+});
 
 Route::get('/dashboard', function (\App\DataTables\UsersDataTable $dataTable) {
     return $dataTable->render('dashboard');
