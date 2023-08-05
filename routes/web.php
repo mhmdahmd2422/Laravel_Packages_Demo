@@ -2,8 +2,12 @@
 
 use App\Helpers\ImageFilter;
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
+use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -81,6 +85,27 @@ Route::get('posts', function (){
 
     return view('post.post', compact('posts'));
 //    auth()->user()->assignRole('admin');
+});
+
+///////////////////////////////////// Socialite
+
+Route::get('/auth/redirect', function (){
+   return Socialite::driver('github')->redirect();
+})->name('github.login');
+
+Route::get('/auth/callback', function (){
+   $user = Socialite::driver('github')->user();
+
+   $user = User::firstOrCreate([
+       'email' => $user->email,
+   ], [
+       'name' => $user->name,
+       'password' => bcrypt(Str::random(24)),
+   ]);
+
+   Auth::login($user);
+
+   return redirect('/dashboard');
 });
 
 
