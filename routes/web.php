@@ -31,6 +31,24 @@ Route::get('image', function (){
     return $img->response();
 });
 
+///////////////////////////
+
+Route::get('shop', [\App\Http\Controllers\CartController::class, 'shop'])->name('shop');
+
+Route::get('cart', [\App\Http\Controllers\CartController::class, 'cart'])->name('cart');
+
+Route::get('add-to-cart/{product_id}', [\App\Http\Controllers\CartController::class, 'addToCart'])->name('add-to-cart');
+
+Route::get('remove-from-cart/{rowId}', [\App\Http\Controllers\CartController::class, 'removeFromCart'])->name('remove-from-cart');
+
+Route::get('clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart'])->name('clear-cart');
+
+Route::get('qty-increment/{rowId}', [\App\Http\Controllers\CartController::class, 'qtyIncrement'])->name('qty-increment');
+
+Route::get('qty-decrement/{rowId}', [\App\Http\Controllers\CartController::class, 'qtyDecrement'])->name('qty-decrement');
+
+/////////////////////////////
+
 Route::get('/dashboard', function (\App\DataTables\UsersDataTable $dataTable) {
     return $dataTable->render('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
